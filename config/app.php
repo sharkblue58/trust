@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Ichtrojan\Otp\OtpServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
     ],
 
     /*
@@ -212,6 +213,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Otp' => Ichtrojan\Otp\Otp::class,
+        'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
     ])->toArray(),
 
 ];

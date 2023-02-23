@@ -8,6 +8,7 @@ use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\User\LoginController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\StripPaymentController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\RegisterController;
 use App\Http\Controllers\User\ResetPassController;
@@ -37,7 +38,7 @@ Route::post('password/reset-password',[ResetPassController::class,'passwordReset
 //admin
 Route::get('admin/Alladmins',[AdminProfileController::class,'profile'])
 ->middleware(['auth:sanctum', 'ability:admin']);
-//frontuser
+//user
 Route::get('allUsers',[ProfileController::class,'allUsers'])
 ->middleware(['auth:sanctum', 'ability:user,admin']);
 Route::post('email-verfication',[EmailVerfyController::class,'emaiVerify'])
@@ -114,4 +115,6 @@ Route::delete('/cart/{cart}', 'destroy');
 Route::get('/cart/search/{name}',  'search');
 });
 
+//payment
+Route::post('stripe',[StripPaymentController::class,'paymentStripe']);
 
