@@ -197,6 +197,7 @@ return [
         Ichtrojan\Otp\OtpServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
+        Srmklive\PayPal\Providers\PayPalServiceProvider::class,
     ],
 
     /*

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
@@ -17,6 +18,8 @@ use App\Http\Controllers\User\ForgetPassController;
 use App\Http\Controllers\ProductsDiscountController;
 use App\Http\Controllers\ProductsInventoryController;
 use App\Http\Controllers\Admin\AdminProfileController;
+use App\Http\Controllers\PaypalPaymentController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +56,7 @@ Route::get('/products',  'index');
 Route::get('/products/{products}', 'show');
 Route::get('/products/search/{name}',  'search');
 Route::get('/products/search/categories/{name}','searchCategories');
-Route::post('admin/products/store','store')->middleware(['auth:sanctum', 'ability:admin']);
+Route::post('admin/products/store','store')->middleware(['auth:sanctum', 'ability:admin']);  
 Route::put('admin/products/{products}', 'update')->middleware(['auth:sanctum', 'ability:admin']);
 Route::delete('admin/products/{products}',  'destroy')->middleware(['auth:sanctum', 'ability:admin']);
 });
@@ -115,6 +118,25 @@ Route::delete('/cart/{cart}', 'destroy');
 Route::get('/cart/search/{name}',  'search');
 });
 
-//payment
+//payment stripe
 Route::post('stripe',[StripPaymentController::class,'paymentStripe']);
 
+//paymen paypal
+Route::controller(PaypalPaymentController::class)->group(function(){
+    Route::post('paypal-payment','paymentPaypal');
+    Route::get('paypal-cancel','cancelPaymentPaypal');
+    Route::get('paypal-success','successPaymentPaypal');
+});
+
+//review
+Route::controller(ReviewController::class)->group(function(){
+    Route::get('/reviews/show/{id}','show');
+    Route::delete('/reviews/destroy/{id}','destroy');
+    Route::put('/reviews/update/{id}','update');
+    Route::post('/reviews/store','store');
+    Route::get('/reviews','index');  
+});
+//address
+Route::controller(AddressController::class)->group(function(){
+    
+});
