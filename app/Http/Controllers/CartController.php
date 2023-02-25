@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Session;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\ProductsResource;
 
@@ -17,9 +19,7 @@ class CartController extends Controller
             Cart::all()
         );
     }
-    
-
- public function store(Request $request) 
+    public function store(Request $request) 
     {
 
         // Validate the request data.
@@ -27,195 +27,46 @@ class CartController extends Controller
         $this->validate($request, [
 
             'product_id' => 'required|numeric',
-            'session_id' => 'required|numeric',
 
             'quantity' => 'required|numeric',
+            'session_id' => 'required|numeric',
+
 
         ]);
-
-        // Get the product from the database.
-
-        $product = Product::findOrFail($request->product_id);
-
-        // Check if the cart already has an item with the same product id.
-
-         $cartItem = Cart::where('product_id')->where('product_id', $request->product_id)->first();
-
-        if ($cartItem=$product ) {  // If it does, update the quantity.
-
-            // $caremtIt ->quantity += $request->quantity;  // Add new quantity to existing quantity. 
-            // $cartItem ->quantity += $request->quantity;
-
-            // $cartItem ->save();  // Save the updated cart item.  
-            $cartItem = Cart::add(array(
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $request->quantity, // add quantity here 
-            ));
+ 
+        $product =Product::findOrFail( $request->product_id);
 
 
-        }
-        else{Cart::create([   // Create a new cart item with user id, product id and quantity from request data.  
+        $cartItem = Cart::where('session_id', Session()->all())->where('product_id', $request->product_id)->first();
 
+        if ($cartItem) {  // If it does, update the quantity.
+
+            $cartItem->quantity += $request->quantity;  // Add new quantity to existing quantity. 
+
+            $cartItem->save();  // Save the updated cart item.  
+
+        } else {  // If it doesn't, create a new cart item.  
+
+            Cart::create([   // Create a new cart item with user id, product id and quantity from request data.  
+
+                'session_id' =>$request->session_id,  
+
+                'product_id' => $request->product_id,  
+
+                'quantity' => $request->quantity,  
+
+            ]);  
+
+        }   return  new ProductsResource($product);}
+    }
       
-            'product_id' => $request->product_id,  
-            'session_id' => $request->session_id,
-            'quantity' => $request->quantity,  
-
-        ]);
-    
-    }
-        
-    
-    
-    
-    
-    
-    
-    }
-
-
-    public function show( Request $Cart,$id)
-    {
-       
-        $Cart=Cart::find($id);
-       
-        // $product=Product::find($id);
-        // return  new   ProductsResource($product);
-        return  new   CartResource($Cart);
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // public function store(Request $request) 
-    // {
-
-    //     // Validate the request data.
-
-    //     $this->validate($request, [
-
-    //         'product_id' => 'required|numeric',
-    //         'session_id' =>'required|numeric',
-    //         'quantity' => 'required|numeric',
-
-    //     ]);
-
-    
-
-    //         Cart::create([   // Create a new cart item with user id, product id and quantity from request data.  
-
-    //             // 'user_id' => Auth::id(),  
-
-
-    //             'product_id' => $request->product_id,  
-    //             'session_id' =>$request->session_id,  
-    //             'quantity' => $request->quantity,  
-
-               
-
-    //         ]);  
-
-
-
-
-
-
-
-      
-   
-    
-    
-    
-    public function update( Request $request, Cart $Cart)
-    {
-        // if(Auth::user()->id !== $Category->user_id) {
-        //     return $this->error('', 'You are not authorized to make this request', 403);
-        // }
-        $Cart->update($request->all());
-        return new CartResource($Cart);;
-
-      
-    }
-
-    public function destroy(Cart $Cart)
-    {
-        return  $Cart->delete();
-    }
-
-
-    
-    public function add(Request $request)
-    {
-        // Validate the request data
-        $this->validate($request, [
-            'product_id' => 'required|integer',
-            'quantity' => 'required|integer',
-        ]);
-    
-        // Get the product from the database
-        $product = Product::findOrFail($request->product_id);
-    
-        // Add the product to the cart
-        Cart::add([
-            'id' => $product->id, 
-            'name' => $product->name, 
-           
-            'quantity' => $request->quantity, 
-         
-        ]);
-    
-    
-    
-    
-    
-    }}
-        
-       
-    // public function addToCart(Request $request) 
-    // {
-
-    //     // Validate the request data.
-
-    //     $this->validate($request, [
-
-    //         'product_id' => 'required|numeric',
-
-    //         'quantity' => 'required|numeric',
-
-    //     ]);
-
-    //     // Get the product from the database.
-
-    //     $product = Product::findOrFail($request->product_id);
-
-    //     // Check if the cart already has an item with the same product id.
-
-    //     $cartItem = ->where('product_id', $request->product_id)->first();
-
-    //     if ($cartItem) {  // If it does, update the quantity.
-
-    //         $cartItem->quantity += $request->quantity;  // Add new quantity to existing quantity. 
-
-    //         $cartItem->save();  // Save the updated cart item.  
-
-    //     }
+        //   public function removeFromCart(Request $request){    
+        //          // Validate the request data.  
+        //         $this->validate($request, [         
+        //                 'cart_item_id' => 'required|numeric',         ]);    
+        //                         // Get the cart item from database using its id from request data.       
+        //                 $cartItem = Cart::findOrFail($request->cart_item_id);     
+        //             if ($cartItem && Auth::check() && Auth::user()->id == $cartItem->user_id) {           
+        //                 // Delete the cart item if user is authenticated and is owner of this cart item.    
+        //     $cartItem->delete();              return back()->with('success', "Product removed from your cart!");         } 
+        //     else {             return back()-withErrors(['msg' => "You don't have permission to delete this product."]);         }     }}

@@ -101,7 +101,7 @@ Route::controller(ProductsDiscountController::class)->group(function(){
 //shopping
 Route::controller(ShoppingController::class)->group(function(){
     Route::get('/shopping','index');
-    Route::post('/shopping',  'store');
+    Route::post('/shopping/store','store');
     Route::get('/shopping/{shopping}','show');
     Route::put('shopping/{shopping}','update');
     Route::delete('/shopping/{shopping}','destroy');
@@ -138,5 +138,9 @@ Route::controller(ReviewController::class)->group(function(){
 });
 //address
 Route::controller(AddressController::class)->group(function(){
-    
+    Route::get('/address/show/{id}','show');
+    Route::delete('/address/destroy/{id}','destroy');
+    Route::put('/address/update/{id}','update');
+    Route::post('/address/store','store');
+    Route::get('/address','index');  
 });

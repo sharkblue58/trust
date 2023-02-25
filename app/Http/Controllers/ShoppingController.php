@@ -90,13 +90,4 @@ class ShoppingController extends Controller
 
      }
     
-
-
-
-
-
-
-
-
-
 }
