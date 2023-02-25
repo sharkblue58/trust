@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
@@ -55,9 +56,20 @@ class CategoriesController extends Controller
      */
     public function show( Request $Category,$id)
     {
+        try{
+            $Category=Category::find($id);
+            if($Category!=null){
+                return  new   CategoriesResource($Category);
+            }else{
+                return response()->json([
+                    'status' => 'true',
+                    'msg' => 'no records with this id ,please check id ! '
+                ],201);
+            }  
+        }catch (Exception $ex) {
+            return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => 'view process failed'], 500);
+        }
 
-        $Category=Category::find($id);
-        return  new   CategoriesResource($Category);
 
     }
     

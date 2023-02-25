@@ -102,20 +102,18 @@ Route::controller(ProductsDiscountController::class)->group(function(){
 Route::controller(ShoppingController::class)->group(function(){
     Route::get('/shopping','index');
     Route::post('/shopping/store','store');
-    Route::get('/shopping/{shopping}','show');
-    Route::put('shopping/{shopping}','update');
-    Route::delete('/shopping/{shopping}','destroy');
-    Route::get('/shopping/search/{name}','search');
+    Route::get('/shopping/show/{shopping}','show');
+    Route::put('shopping/update/{shopping}','update');
+    Route::delete('/shopping/destroy/{shopping}','destroy');
 });
 
 //cart
 Route::controller(CartController::class)->group(function(){
 Route::get('/cart', 'index');
-Route::post('/cart', 'store');
-Route::get('/cart/{cart}', 'show');
-Route::put('/cart/{cart}', 'update');
-Route::delete('/cart/{cart}', 'destroy');
-Route::get('/cart/search/{name}',  'search');
+Route::post('cart/store', 'store');
+Route::get('/cart/show/{cart}', 'show');
+Route::put('/cart/update/{cart}', 'update');
+Route::delete('/cart/destroy/{cart}', 'destroy');
 });
 
 //payment stripe
