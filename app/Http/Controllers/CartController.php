@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\CartResource;
 use App\Http\Resources\ProductsResource;
 use App\Models\Product;
+use App\Models\Session;
 
 class CartController extends Controller 
 {
@@ -51,11 +52,18 @@ class CartController extends Controller
 
     public function store(Request $request)
     {
-        $cart = new Cart();
-        $cart->session_id = $request->session_id;
-        $cart->product_id = $request->product_id;
-        $cart->quantity = $request->quantity;
-        $cart->save();
+        $cartItem = Cart::where('session_id',$request->session_id )->where('product_id', $request->product_id)->first();
+        if ($cartItem) {  
+            $cartItem->quantity += $request->quantity;  
+            $cartItem->save();  
+        }
+        else{
+            $cart = new Cart();
+            $cart->session_id = $request->session_id;
+            $cart->product_id = $request->product_id;
+            $cart->quantity = $request->quantity;
+            $cart->save();
+        }
         return response()->json([
             'status' => 'true',
             'msg' => 'data stored successfuly'

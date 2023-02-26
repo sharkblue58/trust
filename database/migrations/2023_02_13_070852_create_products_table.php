@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('product_categories');
             $table->foreignId('inventory_id')->constrained('product_inventories');
             $table->decimal('price');
+            $table->integer('rating');
             $table->foreignId('discount_id')->constrained('discounts')->nullable();
             $table->timestamps();
         });

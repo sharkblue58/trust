@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\AddressController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
+use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\CategoriesController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\User\LoginController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\StripPaymentController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\PaypalPaymentController;
 use App\Http\Controllers\User\RegisterController;
 use App\Http\Controllers\User\ResetPassController;
 use App\Http\Controllers\User\EmailVerfyController;
@@ -18,8 +21,7 @@ use App\Http\Controllers\User\ForgetPassController;
 use App\Http\Controllers\ProductsDiscountController;
 use App\Http\Controllers\ProductsInventoryController;
 use App\Http\Controllers\Admin\AdminProfileController;
-use App\Http\Controllers\PaypalPaymentController;
-use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\GoogleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -141,4 +143,9 @@ Route::controller(AddressController::class)->group(function(){
     Route::put('/address/update/{id}','update');
     Route::post('/address/store','store');
     Route::get('/address','index');  
+});
+//google
+Route::controller(GoogleController::class)->group(function(){
+    Route::get('google/redirect', 'redirect');
+    Route::get('google/callback', 'callback');
 });

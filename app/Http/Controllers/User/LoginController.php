@@ -23,7 +23,7 @@ class LoginController extends Controller
             $user->tokens()->delete();
             $user->notify(new LoginNotification());
             $success['token']=$user->createToken('user',['user'])->plainTextToken;
-            $success['name']=$user->first_name;
+            $success['msg']=$user->first_name;
             $success['success']=true;
             return response()->json($success,200);
         }else{
