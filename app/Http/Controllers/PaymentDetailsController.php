@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Models\Payement;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class PaymentDetailsController extends Controller
@@ -12,7 +12,7 @@ class PaymentDetailsController extends Controller
     {
         
         try {
-            $allPayment = Payement::all();
+            $allPayment = Payment::all();
             if ($allPayment != null) {
                 return response()->json([
                     'status' => 'true',
@@ -32,13 +32,13 @@ class PaymentDetailsController extends Controller
 
     public function store(Request $request)
     {
-        $payement = new Payement();
-        $payement->user_id = $request->user_id;
-        $payement->payment_type = $request->payment_type;
-        $payement->provider = $request->provider;
-        $payement->account_no = $request->account_no;
-        $payement->expiry = $request->expiry;
-        $payement->save();
+        $payment = new Payment();
+        $payment->user_id = $request->user_id;
+        $payment->payment_type = $request->payment_type;
+        $payment->provider = $request->provider;
+        $payment->account_no = $request->account_no;
+        $payment->expiry = $request->expiry;
+        $payment->save();
         return response()->json([
             'status' => 'true',
             'msg' => 'data stored successfuly'
@@ -48,11 +48,11 @@ class PaymentDetailsController extends Controller
     public function show($id)
     {
         try {
-            $payement = Payement::find($id);
-            if ($payement != null) {
+            $payment = Payment::find($id);
+            if ($payment != null) {
                 return response()->json([
                     'status' => 'true',
-                    'user' => $payement,
+                    'user' => $payment,
                 ], 201);
             } else {
                 return response()->json([
@@ -68,11 +68,11 @@ class PaymentDetailsController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $payement = Payement::find($id);
-            if ($payement != null) {
-                $payement->rate = $request->rate;
-                $payement->desc = $request->desc;
-                $payement->save();
+            $payment = Payment::find($id);
+            if ($payment != null) {
+                $payment->rate = $request->rate;
+                $payment->desc = $request->desc;
+                $payment->save();
                 return response()->json([
                     'status' => 'true',
                     'msg' => 'your payement is updated now'
@@ -92,9 +92,9 @@ class PaymentDetailsController extends Controller
     {
         try {
 
-            $payement = Payement::find($id);
-            if ($payement != null) {
-                $payement->delete();
+            $payment = Payment::find($id);
+            if ($payment != null) {
+                $payment->delete();
                 return response()->json([
                     'status' => 'true',
                     'msg' => 'your payement is deleted now'

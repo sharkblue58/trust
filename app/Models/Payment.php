@@ -5,19 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payement extends Model
+class Payment extends Model
 {
     use HasFactory;
-    protected $table = 'user_payements';
+    protected $table='user_payment';
     protected $fillable = [
-        'user_id',
+        'user_id' ,
         'payment_type',
         'provider',
         'account_no',
-        'expiry'
+        'expiry',
     ];
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

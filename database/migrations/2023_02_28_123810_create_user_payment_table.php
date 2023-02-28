@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_payments', function (Blueprint $table) {
+        Schema::create('user_payment', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('payment_type')->unique();
             $table->string('provider')->unique();
             $table->string('account_no')->unique();
-            $table->date('expiry');
+            $table->date('expiry')->nullable();
             $table->timestamps();
         });
     }
