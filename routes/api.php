@@ -3,9 +3,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
+use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ShoppingController;
 use App\Http\Controllers\CategoriesController;
@@ -148,8 +150,8 @@ Route::controller(AddressController::class)->group(function(){
 });
 //google
 Route::controller(GoogleController::class)->group(function(){
-    Route::get('google/redirect', 'redirect');
-    Route::get('google/callback', 'callback');
+    Route::get('/google/redirect', 'redirect');
+    Route::get('/google/callback', 'callback');
 });
 
 //order_details
@@ -176,3 +178,10 @@ Route::controller(PaymentDetailsController::class)->group(function(){
         Route::put('/paymentDetails/update/{order}',  'update');
         Route::delete('/paymentDetails/destroy/{order}','destroy');
         });
+
+
+        //facebook
+Route::controller(FacebookController::class)->group(function(){
+    Route::get('/facebook/redirect', 'redirect');
+    Route::get('/facebook/callback', 'callback');
+});
