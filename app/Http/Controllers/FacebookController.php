@@ -11,6 +11,6 @@ class FacebookController extends Controller
         return Socialite::driver('facebook')->redirect();
       }
       public function callback(){
-        $user = Socialite::driver('facebook')->user(); 
+        $user = Socialite::driver('facebook')->stateless()->user(); 
       }
 }
