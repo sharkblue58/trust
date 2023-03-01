@@ -35,7 +35,7 @@ class OrderDetailsController extends Controller
     {
         $order = new Order();
         $order->user_id = $request->user_id;
-        //$order->payment_id = $request->payment_id;
+        $order->payment_id = $request->payment_id;
         $order->total = $request->total;
         $order->save();
         return response()->json([
