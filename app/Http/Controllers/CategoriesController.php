@@ -12,27 +12,35 @@ use App\Http\Requests\StoreCategoriesRequest;
 
 class CategoriesController extends Controller
 {
-    use HttpResponses;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
+  
     public function index()
     {
-        return CategoriesResource::collection(
-              Category::all()
-        );
+
+        try {
+            $allCategory = CategoriesResource::collection(
+                Category::all()
+          );
+            if ($allCategory!= null) {
+                return response()->json([
+                    'status' => 'true',
+                    'data' => $allCategory,
+                ], 201);
+            } else {
+                return response()->json([
+                    'status' => 'true',
+                    'msg' => 'there is no reviews now '
+                ],201);
+            }
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => 'failed to get reviews'], 500);
+        }
+
+        
     }
     
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store( StoreCategoriesRequest $request)
     {
         $request->validated($request->all());
@@ -48,12 +56,7 @@ class CategoriesController extends Controller
         return new CategoriesResource($Category);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function show( Request $Category,$id)
     {
         try{
@@ -93,17 +96,14 @@ class CategoriesController extends Controller
    
     public function search($name)
     {    
-       
-    
-        if ($name) {
+
+            if ($name) {
             return Category::where('name', $name)
             ->orWhere('name',"like","$name%",$name)->
             
             orWhere('id',$name)->get();
-     
         }
     
-
      }
 
 }

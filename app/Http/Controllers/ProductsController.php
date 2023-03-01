@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use Exception;
 
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -28,19 +29,30 @@ class ProductsController extends Controller
     public function index()
     {
        
-        $product = Product::paginate();
+        try {
+            $product = Product::paginate();
             return  ProductsResource::collection($product);
+          
+            if ($product != null) {
+                return response()->json([
+                    'status' => 'true',
+                    'data' => $ $product ,
+                ], 201);
+            } else {
+                return response()->json([
+                    'status' => 'true',
+                    'msg' => 'there is no reviews now '
+                ],201);
+            }
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => 'failed to get reviews'], 500);
+        }
+
+
    
     }
     
     
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store( StoreProductRequest $request)
     {
         $request->validated($request->all());
@@ -69,37 +81,26 @@ class ProductsController extends Controller
         return new ProductsResource($product);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show( Request $product,$id)
-    {
+   
+public function show( Request $product,$id)
+{
 
+try{
         $product=Product::find($id);
-        return  new   ProductsResource($product);
+        if($product!=null){
+            return  new   ProductsResource($product);
+        }else{
+            return response()->json([
+                'status' => 'true',
+                'msg' => 'no records with this id ,please check id ! '
+            ],201);
+        }  
+    }catch (Exception $ex) {
+        return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => 'view process failed'], 500);
+    }
 
     }
-    //     public function show(Product $product)
-    // {
-    //     return  new ProductsResource($product);
-
-    // }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-    
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-    //  */
+   
     // public function update(StoreProductRequest $request,$id)
     // {
     //     // $product = $request->validated($request->all());
@@ -127,27 +128,14 @@ class ProductsController extends Controller
         public function update($id,Request $request)
         {
             $product=Product::find($id);
-            $product->update( [  'name' => $request->name,
-            'desc' => $request->desc,
-            'price' => $request->price,
-           'category_id' =>$request->category_id,
-           'discount_id'=>$request->discount_id,
-           'inventory_id'=>$request->inventory_id,
-        //    'image' => $url,
-        //    'imagepath' => env('APP_URL').'/'.$url,
-             ]);
+            $product->update($request->all('name','desc','price','category_id','discount_id', 'inventory_id','image','imagepath' ));
+         
             $product->update($request->all());
             return  new   ProductsResource($product);
     
           
         }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
    
     public function destroy($id)
     {
@@ -173,14 +161,57 @@ class ProductsController extends Controller
     }
 
      public function searchCategories($category){
-        return Product::join('product_categories', 'products.category_id', '=', 'product_categories.id')
+
+        $category = Product::select(
+            "products.category_id",
+            "products.name",
+            "products.price",
+            "products.desc",
+            "products.image",
+            "products.imagepath"
+        )
+        ->join('product_categories', 'products.category_id', '=', 'product_categories.id')
         ->where('product_categories.name', $category)
         ->get();
-        
+       
+        try {  
+        if ($category != null) {
+            return response()->json([
+                'status' => 'true',
+                'data' => $category ,
+            ], 201);
+        } else {
+            return response()->json([
+                'status' => 'true',
+                'msg' => 'there is no reviews now '
+            ],201);
         }
+    } catch (Exception $exx) {
+        return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => 'failed to get allCarts'], 500);
+    }
+        
+}}
+
+
+
+
+        
+
     
 
-     }
+
+
+        // $AllCarts =  Product::join('product_categories', 'products.category_id', '=', 'product_categories.id');
+            
+        // return Product::join('product_categories', 'products.category_id', '=', 'product_categories.id')
+        // ->where('product_categories.name', $category)
+  
+        // ->get();
+        
+        // }
+    
+
+     
         
     
 

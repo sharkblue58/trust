@@ -137,3 +137,12 @@ class CartController extends Controller
     }
 
 }
+
+
+// public function removeFromCart(Request $request) 
+//     {         // Validate the request data.     
+//             $this->validate($request, [        
+//                      'cart_item_id' => 'required|numeric',       
+//                       ]);          // Get the cart item from database using its id from request data.   
+//                             $cartItem = Cart::findOrFail($request->cart_item_id);   
+//                                    if ($cartItem && Auth::check() && Auth::user()->id == $cartItem->user_id)

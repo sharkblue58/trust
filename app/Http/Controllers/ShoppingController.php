@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Session;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
@@ -14,9 +15,29 @@ class ShoppingController extends Controller
     
     public function index()
     {
-        return ShoppingResource::collection(
-            Session::all()
-        );
+
+
+        try {
+
+            $allSession = ShoppingResource::collection(
+                Session::all()
+          );
+           
+            if ($allSession!= null) {
+                return response()->json([
+                    'status' => 'true',
+                    'data' => $allSession,
+                ], 201);
+            } else {
+                return response()->json([
+                    'status' => 'true',
+                    'msg' => 'there is no reviews now '
+                ],201);
+            }
+        } catch (Exception $ex) {
+            return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => 'failed to get reviews'], 500);
+        }
+
     }
     
 
@@ -40,8 +61,21 @@ class ShoppingController extends Controller
     public function show( Request $Session,$id)
     {
 
-        $Session=Session::find($id);
-        return  new ShoppingResource($Session);
+
+        try{
+            $Session=Session::find($id);
+            if($Session!=null){
+                return   new ShoppingResource($Session);
+            }else{
+                return response()->json([
+                    'status' => 'true',
+                    'msg' => 'no records with this id ,please check id ! '
+                ],201);
+            }  
+        }catch (Exception $ex) {
+            return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => 'view process failed'], 500);
+        }
+
 
     }
 

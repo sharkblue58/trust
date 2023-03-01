@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\AddressController;
@@ -60,9 +61,10 @@ Route::get('/products',  'index');
 Route::get('/products/{products}', 'show');
 Route::get('/products/search/{name}',  'search');
 Route::get('/products/search/categories/{name}','searchCategories');
-Route::post('admin/products/store','store')->middleware(['auth:sanctum', 'ability:admin']);  
-Route::put('admin/products/{products}', 'update')->middleware(['auth:sanctum', 'ability:admin']);
-Route::delete('admin/products/{products}',  'destroy')->middleware(['auth:sanctum', 'ability:admin']);
+Route::post('admin/products/store','store');//->middleware(['auth:sanctum', 'ability:admin']);  
+Route::put('admin/products/{products}', 'update');//->middleware(['auth:sanctum', 'ability:admin']);
+Route::delete('admin/products/{products}',  'destroy');//->middleware(['auth:sanctum', 'ability:admin']);
+Route::post('/upload', [ImageController::class, 'upload']);
 });
 
 
@@ -74,9 +76,9 @@ Route::controller(CategoriesController::class)->group(function(){
     Route::get('categories', 'index');
     Route::get('categories/search/{name}', 'search');
     Route::get('categories/{categories}', 'show');
-    Route::post('admin/categories/store',  'store')->middleware(['auth:sanctum', 'ability:admin']);
-    Route::put('admin/categories/{categories}','update')->middleware(['auth:sanctum', 'ability:admin']);
-    Route::delete('admin/categories/{categories}', 'destroy')->middleware(['auth:sanctum', 'ability:admin']);
+    Route::post('admin/categories/store',  'store');//->middleware(['auth:sanctum', 'ability:admin']);
+    Route::put('admin/categories/{categories}','update');//->middleware(['auth:sanctum', 'ability:admin']);
+    Route::delete('admin/categories/{categories}', 'destroy');//->middleware(['auth:sanctum', 'ability:admin']);
 });
 
 
