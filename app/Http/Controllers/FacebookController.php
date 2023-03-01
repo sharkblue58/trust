@@ -14,28 +14,31 @@ class FacebookController extends Controller
       public function redirect(){
         return Socialite::driver('facebook')->redirect();
       }
-      public function callback(){
+      public function callback(Request $request){
+      
         try{
-          $facebookUser = Socialite::with('facebook')->stateless()->user();
-          //return response()->json($facebookUser);
-          $user = User::where('email', $facebookUser->emil)->first();
-           if ($user!=null) {
-              $user1=Auth::user();
-              $user1->tokens()->delete();
-              $user1->notify(new LoginNotification());
-              $success['token']=$user1->createToken('user',['user'])->plainTextToken;
-              $success['msg']=$user->name;
-              $success['success']=true;
-              return response()->json($success,200);
-  
-          } else {
+          $token = $request->input('access_token');
+          $providerUser = Socialite::driver('facebook')->stateless()->user();
+          $user = User::where('email',  $providerUser->email)->first();
+          if($user!=null){
+            $user->tokens()->delete();
+            $user->notify(new LoginNotification());
+            $token = $user->createToken('user',['user'])->plainTextToken;
               return response()->json([
-                  'msg'=>"need to register"
+                  'success' => true,
+                  'msg' => 'you are logged in now',
+                  'token' => $token,
               ]);
-           
-          }  
-      }catch (Exception $ex) {
-          return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => ' facebook failed'], 500);
+          }else{
+              return response()->json([
+                  'success' => true,
+                  'msg' => 'you need to register',
+              ]);
+          }
+      
+        }catch (Exception $ex) {
+          return response()->json(['status' => 'error', 'expcetion' => $ex->getMessage(), 'msg' => 'failed to get allCarts'], 500);
       }
+
       }
 }
